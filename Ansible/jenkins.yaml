@@ -1,0 +1,36 @@
+---
+- name: Install Jenkins on Ubuntu
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Add Jenkins repository and key
+      become: true
+      shell: |
+        curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key \
+        | tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+        echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+        https://pkg.jenkins.io/debian-stable binary/" \
+        > /etc/apt/sources.list.d/jenkins.list
+
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-21-jre
+        state: present
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+
+    - name: Start and enable Jenkins service
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
