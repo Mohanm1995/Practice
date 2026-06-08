@@ -26,3 +26,5 @@
         remote_src: yes
         src: /root/file2.txt
         dest: /root/ansible-test/
+
+        
